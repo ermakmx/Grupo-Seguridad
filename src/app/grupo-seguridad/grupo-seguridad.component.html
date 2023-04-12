@@ -1,0 +1,129 @@
+<div class="container px-4 mt-5">
+    <div class="d-flex justify-content-between">
+        <span class="h6">Grupos de seguridad</span>
+        <select cSelect style="width: 250px;">
+            <option>Seleccionar</option>
+            <option value="SA - Docentes">SA - Docentes</option>
+        </select>
+    </div>
+
+    <div class="mt-5">
+        <p class="text-title fw-bold">Lista de Módulos</p>
+        <table cTable borderless [responsive]="true" [striped]="true" align="middle"
+            class="border group-table">
+                <thead cTableColor="primary">
+                    <tr class="border-bottom">
+                        <th></th>
+                        <th></th>
+                        <th class="text-center">No</th>
+                        <th class="text-center">Nombre</th>
+                        <th class="text-center">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let group of groups">
+                        <td>
+                            <button class="btn btn-outline-danger" (click)="deleteGroup(group.no)">
+                                <svg cIcon name="cil-trash" size="md" title="trash"></svg>
+                            </button>
+                        </td>
+                        <td>
+                            <c-form-check>
+                                <input cFormCheckInput [(ngModel)]="group.select" type="checkbox"/>
+                            </c-form-check>
+                        </td>
+                        <td class="text-center">{{ group.no }}</td>
+                        <td class="text-center">{{ group.nombre }}</td>
+                        <td class="text-center">
+                            <c-badge [ngClass]="{'bg-success' : group.estado == true,
+                            'bg-danger': group.estado == false}">
+                                {{ group.estado == true ? 'Activo' : 'Desactivado' }}
+                            </c-badge>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot cTableColor="primary">
+                    <tr>
+                        <td>
+                            <button class="btn btn-outline-danger" (click)="deleteAllGroup()">
+                                <svg cIcon name="cil-trash" size="md" title="Delete users Icon"></svg>
+                                Eliminar
+                            </button>
+                        </td>
+                        <td>
+                            <c-form-check>
+                                <input cFormCheckInput type="checkbox" (click)="selectAll()"/>
+                            </c-form-check>
+                        </td>
+                        <td class="text-end" colspan="3">
+                            <button class="btn" (click)="toggleLiveDemo()">
+                                <svg cIcon name="cil-plus" size="md" title="Add users Icon"></svg>
+                                Agregar Módulo
+                            </button>
+                        </td>
+                    </tr>
+                </tfoot>
+        </table>
+
+    </div>
+</div>
+
+<c-modal size="xl" [visible]="visible" (visibleChange)="openModal($event)">
+    <c-modal-header>
+      <h5 cModalTitle>Agregar usuarios</h5>
+      <button (click)="toggleLiveDemo()" cButtonClose class="btn">
+        <svg cIcon name="cil-x" size="md" title="Delete users Icon"></svg>
+      </button>
+    </c-modal-header>
+    <c-modal-body>
+        <div class="mb-4">
+            <span>Nombre: </span>
+            <input class="mx-3" [(ngModel)]="filter" type="text" maxlength="50">
+            <button class="btn">
+                <svg cIcon name="cil-task" size="lg" title="search users Icon"></svg>
+            </button>
+        </div>
+
+        <h5>Lista de usuarios</h5>
+        <table [hover]="false" [responsive]="true" [striped]="false" align="middle"
+            cTable borderless class="border bg-white">
+                <thead cTableColor="infprimaryo">
+                    <tr class="border-bottom">
+                        <th></th>
+                        <th class="text-center">No</th>
+                        <th class="text-center">Nombre</th>
+                        <th class="text-center">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let m of modulos | userFilter: filter">
+                        <td>
+                            <c-form-check>
+                                <input cFormCheckInput [(ngModel)]="m.select" [value]="m.no" type="checkbox" />
+                            </c-form-check>
+                        </td>
+                        <td class="text-center">
+                            <span class="ms-2">{{ m.no }}</span>
+                        </td>
+                        <td class="text-center">{{ m.nombre }}</td>
+                        <td class="text-center">
+                            <c-badge [ngClass]="{'bg-success' : m.estado == true,
+                            'bg-danger': m.estado == false}">
+                                {{ m.estado == true ? 'Activo' : 'Desactivado' }}
+                            </c-badge>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot cTableColor="primary">
+                    <tr>
+                        <td class="text-end" colspan="4">
+                            <button class="btn" (click)="addUser()">
+                                <svg cIcon name="cil-plus" size="md" title="Add users Icon"></svg>
+                                Asignar usuarios
+                            </button>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+    </c-modal-body>
+</c-modal>
